@@ -10,6 +10,10 @@ public class Apple {
     this.color = color;
   }
 
+  public static Apple of(int weight, Color color) {
+    return new Apple(weight, color);
+  }
+
   public int getWeight() {
     return weight;
   }
