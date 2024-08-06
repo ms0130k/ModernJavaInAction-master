@@ -50,6 +50,7 @@ public class Dish {
   public static final List<Dish> menu = asList(
       new Dish("pork", false, 800, Dish.Type.MEAT),
       new Dish("beef", false, 700, Dish.Type.MEAT),
+      new Dish("low beef", false, 100, Dish.Type.MEAT),
       new Dish("chicken", false, 400, Dish.Type.MEAT),
       new Dish("french fries", true, 530, Dish.Type.OTHER),
       new Dish("rice", true, 350, Dish.Type.OTHER),
@@ -63,6 +64,7 @@ public class Dish {
   static {
     dishTags.put("pork", asList("greasy", "salty"));
     dishTags.put("beef", asList("salty", "roasted"));
+    dishTags.put("low beef", asList("salty", "roasted"));
     dishTags.put("chicken", asList("fried", "crisp"));
     dishTags.put("french fries", asList("greasy", "fried"));
     dishTags.put("rice", asList("light", "natural"));
