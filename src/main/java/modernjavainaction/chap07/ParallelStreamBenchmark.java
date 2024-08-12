@@ -39,6 +39,10 @@ public class ParallelStreamBenchmark {
   public long sequentialSum() {
     return Stream.iterate(1L, i -> i + 1).limit(N).reduce(0L, Long::sum);
   }
+  @Benchmark
+  public long sequentialSumWithUnboxed() {
+    return LongStream.iterate(1L, i -> i + 1).limit(N).reduce(0L, Long::sum);
+  }
 
   @Benchmark
   public long parallelSum() {
@@ -61,3 +65,12 @@ public class ParallelStreamBenchmark {
   }
 
 }
+/*
+Benchmark                                  Mode  Cnt    Score     Error  Units
+ParallelStreamBenchmark.iterativeSum       avgt    4    8.427 ±  22.484  ms/op
+ParallelStreamBenchmark.parallelRangedSum  avgt    4    1.898 ±   1.135  ms/op
+ParallelStreamBenchmark.parallelSum        avgt    4  155.280 ± 373.266  ms/op
+ParallelStreamBenchmark.rangedSum          avgt    4    9.160 ±  26.370  ms/op
+ParallelStreamBenchmark.sequentialSum      avgt    4  191.638 ±  20.530  ms/op
+
+ */
