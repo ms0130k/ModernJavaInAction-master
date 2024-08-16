@@ -17,6 +17,10 @@ public class WordCount {
     System.out.println("Found " + countWords(SENTENCE) + " words");
   }
 
+  public static int countWordsByMime() {
+    return 0;
+  }
+
   public static int countWordsIteratively(String s) {
     int counter = 0;
     boolean lastSpace = true;
