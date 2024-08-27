@@ -1,46 +1,47 @@
 package modernjavainaction.chap07;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static modernjavainaction.chap07.WordCount.SENTENCE;
 
 public class WordCounter {
-    public static int countWordIteratively(String s) {
-        char[] chars = s.toCharArray();
-        int result = 0;
-        boolean prevIsSpace = true;
-        for (char c : chars) {
-            if (Character.isWhitespace(c)) {
-                prevIsSpace = true;
-                continue;
-            }
-            if (prevIsSpace) result++;
-            prevIsSpace = false;
+    private int count;
+    private boolean isSpace;
+
+    private WordCounter(int count, boolean isSpace) {
+        this.count = count;
+        this.isSpace = isSpace;
+    }
+
+    private WordCounter accumulate(Character c) {
+        if (Character.isWhitespace(c)) {
+            return isSpace ? this : new WordCounter(count, true);
         }
-        return result;
+        return isSpace ? new WordCounter(count + 1, false) : this;
+    }
+
+    private WordCounter combine(WordCounter wordCounter) {
+        System.out.println("combine");
+        return new WordCounter(count + wordCounter.getCount(), true);
+    }
+
+    private int getCount() {
+        return count;
+    }
+
+    public static int countWords(String sentence) {
+        return IntStream.range(0, sentence.length())
+                .parallel()
+                .mapToObj(sentence::charAt)
+                .reduce(new WordCounter(0, true),
+                        WordCounter::accumulate,
+                        WordCounter::combine
+                ).getCount();
     }
 
     public static void main(String[] args) {
-        int i = countWordIteratively(SENTENCE);
-        assert i == 19;
-        long start = System.nanoTime();
-        int iterationCount = 1000000;
-        for (int j = 0; j < iterationCount; j++) {
-            List<Character> collect = SENTENCE.chars()
-                    .mapToObj(c -> (char) c)
-                    .collect(Collectors.toList());
-        }
-        System.out.println((System.nanoTime() - start) / 1_000_000);
-
-        start = System.nanoTime();
-        for (int j = 0; j < iterationCount; j++) {
-            List<Character> collect1 = IntStream.range(0, SENTENCE.length())
-                    .mapToObj(SENTENCE::charAt)
-                    .collect(Collectors.toList());
-        }
-        System.out.println((System.nanoTime() - start) / 1_000_000);
+        int i = countWords(SENTENCE);
+        System.out.println(i);
     }
 }
