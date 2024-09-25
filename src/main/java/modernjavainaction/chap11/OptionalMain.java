@@ -91,4 +91,8 @@ public class OptionalMain {
      .orElse("Unknown");
   }
 
+  public static void main(String[] args) {
+      String carInsuranceName = new OptionalMain().getCarInsuranceName(Optional.of(new Person()));
+      System.out.println(carInsuranceName);
+  }
 }
