@@ -1,7 +1,11 @@
 package modernjavainaction.chap12;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.*;
+import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 
 public class DateTimeMain {
@@ -11,7 +15,103 @@ public class DateTimeMain {
 //        extracted2();
 //        extracted3();
 //        extracted4();
+//        extracted5();
+//        extracted6();
+//        extracted7();
+//        extracted8();
+//        extracted9();
+//        extracted10();
 
+
+    }
+
+    private static void extracted10() {
+        Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
+//        System.out.println(availableZoneIds);
+
+        ZoneId korZone = ZoneId.of("Asia/Seoul");
+        ZoneId utcZone = ZoneId.of("UTC");
+        LocalDate date = LocalDate.of(2014, Month.MARCH, 18);
+        ZonedDateTime zdtU = date.atStartOfDay(utcZone);
+        ZonedDateTime zdt1 = date.atStartOfDay(korZone);
+        System.out.println(zdt1);
+        System.out.println(zdtU);
+        LocalDateTime dateTime = LocalDateTime.of(2014, 3, 18, 13, 45);
+//        LocalDateTime dateTime2 = LocalDateTime.of(2014, Month.MARCH, 18, 13, 45);
+        ZonedDateTime zdt2 = dateTime.atZone(korZone);
+        System.out.println(zdt2);
+        Instant instant = Instant.now();
+        ZonedDateTime zdt3 = instant.atZone(korZone);
+        ZonedDateTime zdt5 = instant.atZone(ZoneId.systemDefault());
+        ZonedDateTime zdt4 = instant.atZone(utcZone);
+        System.out.println(zdt3);
+        System.out.println(zdt5);
+        System.out.println(zdt3.equals(zdt5));
+        System.out.println(zdt4);
+        System.out.println(instant);
+    }
+
+    private static void extracted9() {
+        TimeZone aDefault = TimeZone.getDefault();
+        System.out.println(aDefault);
+        ZoneId zoneId = aDefault.toZoneId();
+        System.out.println(zoneId.toString());
+    }
+
+    private static void extracted8() {
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendText(ChronoField.DAY_OF_MONTH)
+                .appendLiteral(". ")
+                .appendText(ChronoField.MONTH_OF_YEAR)
+                .appendLiteral(" ")
+                .appendText(ChronoField.YEAR)
+                .appendLiteral(" yoe ")
+                .appendText(ChronoField.YEAR_OF_ERA)
+                .appendLiteral(" era ")
+                .appendText(ChronoField.ERA)
+                .parseCaseInsensitive()
+                .toFormatter(Locale.KOREA);
+        System.out.println(formatter);
+        String format = LocalDate.now().format(formatter);
+        System.out.println(format);
+    }
+
+    private static void extracted7() {
+        LocalDate date = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter basicIsoDate = DateTimeFormatter.BASIC_ISO_DATE;
+        String format = date.format(basicIsoDate);
+        System.out.println(format);
+        String format1 = now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        System.out.println(format1);
+        String format2 = now.format(DateTimeFormatter.ISO_DATE_TIME);
+        System.out.println(format2);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d, MMMM YYYY", Locale.KOREAN);
+        String format3 = now.format(dateTimeFormatter);
+        System.out.println(format3);
+    }
+
+    private static void extracted6() {
+        TemporalAdjuster temporalAdjuster = TemporalAdjusters.ofDateAdjuster(
+                temporal -> {
+                    DayOfWeek dow = DayOfWeek.of(temporal.get(ChronoField.DAY_OF_WEEK));
+                    int dayToAdd = 1;
+                    if (dow == DayOfWeek.FRIDAY) dayToAdd = 3;
+                    else if (dow == DayOfWeek.SATURDAY) dayToAdd = 2;
+                    return temporal.plus(dayToAdd, ChronoUnit.DAYS);
+                }
+        );
+
+        temporalAdjuster = temporal -> {
+            DayOfWeek dow = DayOfWeek.of(temporal.get(ChronoField.DAY_OF_WEEK));
+            int dayToAdd = 1;
+            if (dow == DayOfWeek.FRIDAY) dayToAdd = 3;
+            else if (dow == DayOfWeek.SATURDAY) dayToAdd = 2;
+            return temporal.plus(dayToAdd, ChronoUnit.DAYS);
+        };
+    }
+
+    private static void extracted5() {
         LocalDate date = LocalDate.now();
         date = date.plus(1, ChronoUnit.DAYS);
         LocalDate workingDay = date.with(new NextWorkingDay());
