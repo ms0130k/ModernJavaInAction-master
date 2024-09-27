@@ -1,5 +1,7 @@
 package modernjavainaction.chap12;
 
+import sun.misc.Unsafe;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -21,15 +23,65 @@ public class DateTimeMain {
 //        extracted8();
 //        extracted9();
 //        extracted10();
+//        new Impl().method();
+//        new Impl().method2();
+//        new D().hello();
+    }
 
+    interface A {
+        default void hello() {
+            System.out.println("Hello from A");
+        }
+    }
 
+    interface B extends A {
+        default void hello() {
+            System.out.println("Hi from B");
+        }
+    }
+
+    interface C extends A {
+    }
+
+    static class D implements B, C {
+    }
+
+    interface Super1 {
+        default void method() {
+            System.out.println("super1");
+        }
+    }
+
+    interface Super2 {
+        default void method() {
+            System.out.println("super2");
+        }
+        default void method2() {
+            System.out.println("super22");
+        }
+    }
+
+    interface Super2Child {
+        default void method2() {
+            System.out.println("child2");
+        }
+    }
+
+    static class Impl implements Super1, Super2Child {
+
+        public void method() {
+            System.out.println("Impl");
+        }
     }
 
     private static void extracted10() {
         Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
-//        System.out.println(availableZoneIds);
+        System.out.println(availableZoneIds);
+        ZoneId zoneId = ZoneId.of("America/New_York");
+        System.out.println(zoneId.getRules());
 
         ZoneId korZone = ZoneId.of("Asia/Seoul");
+        System.out.println(korZone.getRules());
         ZoneId utcZone = ZoneId.of("UTC");
         LocalDate date = LocalDate.of(2014, Month.MARCH, 18);
         ZonedDateTime zdtU = date.atStartOfDay(utcZone);
