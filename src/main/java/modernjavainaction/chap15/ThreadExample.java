@@ -10,21 +10,31 @@ class ThreadExample {
     Result result = new Result();
 
     Thread t1 = new Thread(() -> {
-      result.left = f(x);
+      int f = f(x);
+      result.left = f;
     });
     Thread t2 = new Thread(() -> {
-      result.right = g(x);
+      int g = g(x);
+      result.right = g;
     });
+
     t1.start();
     t2.start();
-    t1.join();
-    t2.join();
-    System.out.println(result.left + result.right);
+    t1.join(0);
+    t2.join(0);
+    System.out.println(result.left + " " + result.right);
   }
 
-  private static class Result {
-    private int left;
-    private int right;
+  static int f(int x) {
+    return x + 2;
   }
 
+  static int g(int x) {
+    return x + 1;
+  }
+
+  static class Result {
+    public int left;
+    public int right;
+  }
 }

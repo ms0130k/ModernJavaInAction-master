@@ -1,7 +1,5 @@
 package modernjavainaction.chap12;
 
-import sun.misc.Unsafe;
-
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
